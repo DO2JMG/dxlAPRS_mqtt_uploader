@@ -28,7 +28,11 @@ Parameter       Description
 -p              udp receive port
 -ma             mqtt server address
 -mp             mqtt server port
+-ms             mqtt server subscribe
 
--mp             mqtt server subscribe
 ```
+Example :
 
+```
+./mqtt -p 4020 -ma mqttdomain.org -mp 1883 -ms radiosonde/sondedata
+```
