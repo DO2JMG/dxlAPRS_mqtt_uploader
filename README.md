@@ -1,5 +1,5 @@
 # dxlAPRS_mqtt_uploader
-MQTT-Uploader for dxlAPRS
+Simple MQTT-Uploader for dxlAPRS
 
 
 ## Update your system, then install the required dependencies using:
