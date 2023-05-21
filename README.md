@@ -15,6 +15,11 @@ sudo apt install libmosquitto-dev
   cd dxlAPRS_mqtt_uploader
   make
 ```
+### Changing parameters for sondemod
+
+```
+  -J <ip>:<port>
+```
 
 ### Use help :
 
