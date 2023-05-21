@@ -26,9 +26,13 @@ Parameter       Description
 
 -h              this help
 -p              udp receive port
+-lat            home location latitude
+-lon            home location longitude
+-call           callsign
 -ma             mqtt server address
 -mp             mqtt server port
--ms             mqtt server subscribe
+-mb             mqtt server prefix station beacon
+-ms             mqtt server prefix sondedata
 
 ```
 Example :
