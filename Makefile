@@ -1,7 +1,7 @@
 CC      = gcc
 CXX     = g++
-CFLAGS  = -g -O3 -Wall -Wextra -I../include -std=c++14 -DHAVE_LOG_H `pkg-config --cflags --libs libmosquitto`
-LIBS    = 
+CFLAGS  = -g -O3 -Wall -Wextra -pthread -I../include -std=c++14 -DHAVE_LOG_H `pkg-config --cflags --libs libmosquitto`
+LIBS    = -lpthread 
 LDFLAGS = -g
 
 OBJECTS = main.o mqtt.o
