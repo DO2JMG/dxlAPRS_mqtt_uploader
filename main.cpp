@@ -3,6 +3,8 @@
 #include <chrono>
 #include <thread>
 #include <iostream>
+#include <ctime>
+
 
 #include <bits/stdc++.h>
 #include <stdlib.h>
@@ -12,8 +14,11 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
+
    
 #define MAXLINE 1024
+#define MAXCALLLENGTH 10
+#define MINCALLLENGTH 4
 
 using namespace std::chrono_literals;
 using namespace std;
@@ -54,11 +59,30 @@ private: // MQTT
     }
 };
 
+bool replace(std::string& str, const std::string& from, const std::string& to) {
+    size_t start_pos = str.find(from);
+    if(start_pos == std::string::npos)
+        return false;
+    str.replace(start_pos, from.length(), to);
+    return true;
+}
+
+
+std::string currentDateTime() {
+    std::time_t t = std::time(nullptr);
+    std::tm* now = std::localtime(&t);
+ 
+    char buffer[128];
+    strftime(buffer, sizeof(buffer), "%Y-%m-%dT%XZ", now);
+    return buffer;
+}
+
 void readandsend() {
     mqttclient client; 
 
     while (true) {
         char buffer[MAXLINE];
+        std::smatch m;
 
         socklen_t len;
         int n;
@@ -68,8 +92,23 @@ void readandsend() {
         n = recvfrom(sockfd, (char *)buffer, MAXLINE, MSG_WAITALL, ( struct sockaddr *) &cliaddr, &len);
         buffer[n] = '\0';
 
+        std::string s;
+        s += buffer;
+
+        //cout << s << "\n";
+
+        regex strRegexCall("(?:\"uid)(?:\"\s?:\s?\")(.*)(?:\",)");              
+        string tempcall = "";
+
+        if (regex_search(s, m, strRegexCall)) {
+            tempcall = m.str(0);
+            tempcall = tempcall.substr(0, tempcall.length()-1);
+        } 
+
+        replace(s, tempcall, "\"uid\":\""+config.call+"\"");
+
         client.subscribe(config.mqtt_prefix_sondedata, MQTT::QoS::QoS0);
-        client.publish(config.mqtt_prefix_sondedata, buffer, MQTT::QoS::QoS0);
+        client.publish(config.mqtt_prefix_sondedata, s.c_str(), MQTT::QoS::QoS0);
     }
 }
 
@@ -80,10 +119,11 @@ void uploadStationInfos()
     
     string strOut;
 
-    strOut += "{";
-    strOut += "\"call\": \"" + config.call + "\",";
-    strOut += "\"latitude\": " + to_string(config.latitude) + ",";
-    strOut += "\"longitude\": " + to_string(config.longitude) + "";
+    strOut += "{ ";
+    strOut += "\"call\": \"" + config.call + "\", ";
+    strOut += "\"datetime\": \"" + currentDateTime() + "\", ";
+    strOut += "\"latitude\": " + to_string(config.latitude) + ", ";
+    strOut += "\"longitude\": " + to_string(config.longitude) + " ";
     strOut += "}";
 
     client.subscribe(config.mqtt_prefix_beacon, MQTT::QoS::QoS0);
@@ -178,7 +218,15 @@ int main(int argc, char *argv[]) {
             }
         } 
     }
-       
+
+    if (config.call.length() < MINCALLLENGTH || config.call.length() > MAXCALLLENGTH) { cout << "Error : Call length"; return 0; }
+    if (config.mqtt_prefix_beacon.length() == 0) { cout << "Error : Beacon prefix length"; return 0;  }
+    if (config.mqtt_prefix_sondedata.length() == 0) { cout << "Error : Sondedata prefix length"; return 0;  }
+    if (config.mqttaddress.length() == 0) { cout << "Error : MQTT address error"; return 0;  }
+    if (config.mqttport == 0) { cout << "Error : MQTT port error"; return 0;  }
+
+    transform(config.call.begin(), config.call.end(), config.call.begin(), ::toupper);
+
     if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
         perror("Error : socket creation failed");
         exit(EXIT_FAILURE);
