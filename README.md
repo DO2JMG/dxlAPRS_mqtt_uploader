@@ -15,3 +15,20 @@ sudo apt install libmosquitto-dev
   cd dxlAPRS_mqtt_uploader
   make
 ```
+
+### Use help :
+
+```
+  mqtt -h
+```
+```
+Parameter       Description
+
+-h              this help
+-p              udp receive port
+-ma             mqtt server address
+-mp             mqtt server port
+
+-mp             mqtt server subscribe
+```
+
