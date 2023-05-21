@@ -38,5 +38,5 @@ Parameter       Description
 Example :
 
 ```
-./mqtt -p 4020 -ma mqttdomain.org -mp 1883 -ms radiosonde/sondedata
+./mqtt -p 54321 -ma yourdomain.net -mp 1883 -ms rs/incoming -mb rs/beacon -lat 52.1234 -lon 8.1234 -call DO2JMG
 ```
