@@ -8,7 +8,7 @@ Uploader with mqtt for dxlAPRS
 sudo apt install libmosquitto-dev 
 ```
 
-### unpack and compile:
+### Unpack and compile:
 
 ```
   git clone https://github.com/DO2JMG/dxlAPRS_mqtt_uploader.git
