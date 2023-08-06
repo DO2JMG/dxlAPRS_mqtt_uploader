@@ -139,7 +139,7 @@ int main(int argc, char *argv[]) {
         if (strcmp(argv[i],"-h") == 0 || strcmp(argv[i],"-help") == 0) {
             cout << "\n----------------------------------------------------\n";
             cout << "dxlAPRS mqtt uploader\n";
-            cout  << "Copyright (c) 2023 by Jean-Michael Grobel (Do2JMG)\n";
+            cout  << "Copyright (c) 2023 by Jean-Michael Grobel (DO2JMG)\n";
             cout << "----------------------------------------------------\n\n";
             cout << "Parameter\tDescription\n\n";
             cout << "-h\t\tthis help\n";
